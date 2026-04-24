@@ -1,23 +1,20 @@
 # Voice / register
 
-**Claim:** VRGB can steer *register* (who the speaker is, not just how they
-feel) as cleanly as tone. "Explain recursion" across three registers should
-read as three different humans.
+**Claim:** The `register` dimension steers speaker identity — teacher vs
+researcher vs performer — as cleanly as `tone` steers affect.
 
 ## Method
 
 1. Prompt: "Explain recursion."
-2. Three VRGB states:
-   - `#80c040` — teacher to a child
-   - `#404080` — PhD to PhD
-   - `#c04020` — standup comedian
+2. Three anchor states on the `register` dimension — teacher-to-child,
+   PhD-to-PhD, standup comedian. Anchor values live in `config.json`.
 3. Generate three outputs, present side-by-side.
-4. Optional: a short rubric (vocabulary level, sentence length, analogy use)
-   to quantify the register shift.
+4. Optional rubric (vocabulary level, sentence length, analogy use) to
+   quantify the register shift.
 
 ## Running
 
-```bash
+```
 python run.py --seed 42 --out results.json
 ```
 

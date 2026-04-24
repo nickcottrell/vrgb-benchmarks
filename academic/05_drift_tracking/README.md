@@ -1,7 +1,7 @@
 # Drift tracking under git
 
-**Claim:** 30 days of parameter edits look like a *narrative* when stored as
-VRGB hex deltas, and like JSON noise when stored as raw blobs.
+**Claim:** 30 days of parameter edits produce tighter and more legible
+diffs when stored as VRGB deltas than as labeled JSON.
 
 ## Method
 

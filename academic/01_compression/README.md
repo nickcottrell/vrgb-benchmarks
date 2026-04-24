@@ -1,9 +1,8 @@
 # Semantic compression ratio
 
-**Claim:** For qualitative-judgment data — "how urgent, how risky, how
-confident" — a VRGB hex is strictly smaller than an equivalent JSON label
-dict or natural-language sentence, with full round-trip fidelity under a
-known dimension.
+**Claim:** For qualitative-judgment records, a VRGB hex is smaller than the
+equivalent JSON label dict or natural-language sentence, with exact
+round-trip under a known dimension.
 
 ## Method
 
@@ -33,8 +32,3 @@ Flags:
 - `--out PATH` (default ./results.json)
 
 No network, no GPUs, no API keys. Runs in <1s.
-
-## Why this is the reference benchmark
-
-It is entirely local, entirely deterministic, and entirely about the
-geometry. If the numbers here don't favor VRGB, nothing downstream will.
