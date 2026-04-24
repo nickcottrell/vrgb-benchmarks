@@ -1,7 +1,65 @@
 {
   "benchmark": "academic/03_midpoint_fidelity",
-  "status": "stub",
+  "status": "ok",
   "seed": 42,
-  "metrics": {},
-  "note": "Fill in with midpoint decode test + optional rater half."
+  "headline": "100.00% of 1680 pairs within \u00b10.01 (max error 0.003081)",
+  "metrics": {
+    "n_dimensions": 8,
+    "n_pairs_tested": 1680,
+    "grid_step": 0.05,
+    "error_mean": 0.000989,
+    "error_max": 0.003081,
+    "error_p99": 0.003011,
+    "error_rms": 0.001241,
+    "tolerance": 0.01,
+    "pairs_within_tolerance": 1680,
+    "pass_rate": 1.0
+  },
+  "worst_cases": [
+    {
+      "dimension": "urgency",
+      "a": 0.15,
+      "b": 0.25,
+      "expected": 0.2,
+      "decoded": 0.203081,
+      "error": 0.003081,
+      "label": "slightly critical"
+    },
+    {
+      "dimension": "urgency",
+      "a": 0.75,
+      "b": 0.85,
+      "expected": 0.8,
+      "decoded": 0.796919,
+      "error": 0.003081,
+      "label": "critical"
+    },
+    {
+      "dimension": "confidence",
+      "a": 0.15,
+      "b": 0.25,
+      "expected": 0.2,
+      "decoded": 0.203081,
+      "error": 0.003081,
+      "label": "slightly confident"
+    },
+    {
+      "dimension": "confidence",
+      "a": 0.75,
+      "b": 0.85,
+      "expected": 0.8,
+      "decoded": 0.796919,
+      "error": 0.003081,
+      "label": "confident"
+    },
+    {
+      "dimension": "risk",
+      "a": 0.15,
+      "b": 0.25,
+      "expected": 0.2,
+      "decoded": 0.203081,
+      "error": 0.003081,
+      "label": "slightly risky"
+    }
+  ]
 }

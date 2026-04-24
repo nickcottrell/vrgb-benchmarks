@@ -1,7 +1,290 @@
 {
   "benchmark": "academic/05_drift_tracking",
-  "status": "stub",
+  "status": "ok",
   "seed": 42,
-  "metrics": {},
-  "note": "Simulate 30 days, commit twin representations, diff."
+  "headline": "VRGB captured 30/30 drift days, JSON captured 12/30 (51/65 drift events invisible to JSON)",
+  "metrics": {
+    "days_simulated": 30,
+    "total_drift_events": 65,
+    "label_boundary_crossings": 14,
+    "silent_drift_dims": 51,
+    "silent_drift_rate": 0.7846,
+    "days_vrgb_captured_change": 30,
+    "days_json_captured_change": 12,
+    "mean_vrgb_lines_changed_per_day": 4.2,
+    "mean_json_lines_changed_per_day": 0.933
+  },
+  "fixture": "fixture",
+  "per_day": [
+    {
+      "day": 1,
+      "touched_dims": 3,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 2,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 3,
+      "touched_dims": 3,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 4,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 5,
+      "touched_dims": 1,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 6,
+      "touched_dims": 1,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 7,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 8,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 9,
+      "touched_dims": 1,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 10,
+      "touched_dims": 2,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 11,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 12,
+      "touched_dims": 2,
+      "label_boundary_crossings": 2,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 2,
+      "json_lines_removed": 2
+    },
+    {
+      "day": 13,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 14,
+      "touched_dims": 3,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 15,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 16,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 17,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 18,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 19,
+      "touched_dims": 1,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 20,
+      "touched_dims": 3,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 21,
+      "touched_dims": 1,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 22,
+      "touched_dims": 1,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 23,
+      "touched_dims": 1,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 1,
+      "vrgb_lines_removed": 1,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 24,
+      "touched_dims": 2,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 25,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 26,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 27,
+      "touched_dims": 3,
+      "label_boundary_crossings": 2,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 2,
+      "json_lines_removed": 2
+    },
+    {
+      "day": 28,
+      "touched_dims": 3,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    },
+    {
+      "day": 29,
+      "touched_dims": 3,
+      "label_boundary_crossings": 0,
+      "vrgb_lines_added": 3,
+      "vrgb_lines_removed": 3,
+      "json_lines_added": 0,
+      "json_lines_removed": 0
+    },
+    {
+      "day": 30,
+      "touched_dims": 2,
+      "label_boundary_crossings": 1,
+      "vrgb_lines_added": 2,
+      "vrgb_lines_removed": 2,
+      "json_lines_added": 1,
+      "json_lines_removed": 1
+    }
+  ]
 }

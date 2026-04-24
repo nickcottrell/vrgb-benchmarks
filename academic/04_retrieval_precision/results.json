@@ -1,7 +1,31 @@
 {
   "benchmark": "academic/04_retrieval_precision",
-  "status": "stub",
+  "status": "ok",
   "seed": 42,
-  "metrics": {},
-  "note": "Synthesize corpus, implement VRGB vs BM25, compare p@k."
+  "headline": "VRGB p@5 = 0.960, BM25 p@5 = 0.025 (\u0394 = +0.935)",
+  "metrics": {
+    "n_corpus": 300,
+    "n_queries": 40,
+    "epsilon": 0.3,
+    "mean_relevant_per_query": 8.72,
+    "vrgb_p_at_k": {
+      "1": 1.0,
+      "3": 1.0,
+      "5": 0.96,
+      "10": 0.7725
+    },
+    "bm25_p_at_k": {
+      "1": 0.025,
+      "3": 0.0333,
+      "5": 0.025,
+      "10": 0.0275
+    },
+    "delta_p_at_k": {
+      "1": 0.975,
+      "3": 0.9667,
+      "5": 0.935,
+      "10": 0.745
+    }
+  },
+  "note": "Text is topical and does not express qualitative signals; BM25 has no signal to match on the qualitative query."
 }

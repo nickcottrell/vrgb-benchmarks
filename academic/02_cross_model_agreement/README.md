@@ -1,28 +1,50 @@
 # Cross-model coordinate agreement
 
-**Claim:** Different LLMs shown the same semantic prompt encode their
-responses to nearby coordinates under the same dimension.
+**Result:** Three local Ollama models (qwen2.5:7b, llama3.2:3b,
+llama3.2:1b) rated 12 urgency scenarios on a 0-100 scale. All 36
+responses parsed. Because the `urgency` dimension fixes hue, all
+cross-model variance lives in lightness and is directly comparable.
+
+| Pair | Mean Δlightness |
+|------|-----------------|
+| qwen2.5:7b vs llama3.2:3b | **0.153** |
+| qwen2.5:7b vs llama3.2:1b | 0.324 |
+| llama3.2:3b vs llama3.2:1b | 0.313 |
+
+The two larger models agree tightly (0.15). The 1B model roughly doubles
+the disagreement budget and is identified as the outlier on 5 of 12
+scenarios via median-distance ranking.
 
 ## Method
 
-1. Fix a set of prompts, e.g. "rate the urgency of the following incident
-   reports" over N paragraphs.
-2. Ask each of Opus, Sonnet, Haiku, GPT-4o, Gemini for a value in [0, 1].
-3. Encode each response under the `urgency` dimension.
-4. For each prompt, compute cross-model Δlightness (the disagreement
-   budget; hue is fixed by the dimension).
-5. Report mean, stdev, and the per-prompt disagreement distribution.
+1. 12 incident scenarios ranging from minor UI bugs to production
+   outages.
+2. Each model receives the same prompt: "Rate urgency 0-100, return a
+   single integer."
+3. Generation runs at temperature 0, seed 42, so responses are
+   reproducible (and are committed as `fixture/responses.json`).
+4. Parse the first integer 0-100 from each response, encode under the
+   `urgency` dimension, decode back to lightness.
+5. Report all-three Δlightness, pairwise Δlightness, and per-scenario
+   outlier identification (model furthest from the median).
+
+Hue variance is zero by construction — same dimension, same hue anchor.
+The design property is that **all opinion spread becomes measurable
+lightness variance on a comparable scale**.
 
 ## Running
 
 ```
-python run.py --seed 42 --out results.json
+python run.py --seed 42 --out results.json           # uses cached fixture
+python run.py --seed 42 --regen --out results.json   # re-calls Ollama
 ```
 
-Requires API keys in env (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
-`GEMINI_API_KEY`). Falls back to a recorded fixture if `--fixture` is passed.
+Regeneration requires Ollama reachable at `http://localhost:11434` with
+the three models pulled. First run takes ~15 seconds; cached-fixture
+runs are instant.
 
 ## Status
 
-Stub. Interface is fixed; fill in `run.py` with real API calls (or record a
-fixture once and check it in for free-to-run CI).
+Implemented. Scaling this to frontier hosted models (Claude, GPT,
+Gemini) with API keys is the obvious follow-up and would test
+agreement in a higher-capability regime.

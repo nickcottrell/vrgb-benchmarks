@@ -16,3 +16,6 @@ build/
 */*/*.log
 */*/runs/
 */*/*.cache
+
+# Drift-tracking fixture is regenerated on each run
+academic/05_drift_tracking/fixture/

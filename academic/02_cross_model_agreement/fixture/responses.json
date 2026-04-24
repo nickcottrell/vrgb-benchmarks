@@ -1,0 +1,232 @@
+{
+  "seed": 42,
+  "models": [
+    "qwen2.5:7b",
+    "llama3.2:3b",
+    "llama3.2:1b"
+  ],
+  "responses": {
+    "qwen2.5:7b": [
+      {
+        "scenario_id": 0,
+        "scenario": "A shared Slack bot posted a duplicate welcome message to one channel.",
+        "raw": "25",
+        "rating": 25
+      },
+      {
+        "scenario_id": 1,
+        "scenario": "The auth service has been returning 502s for all login attempts for 6 minutes.",
+        "raw": "85",
+        "rating": 85
+      },
+      {
+        "scenario_id": 2,
+        "scenario": "A scheduled report was delivered 30 minutes later than usual.",
+        "raw": "25",
+        "rating": 25
+      },
+      {
+        "scenario_id": 3,
+        "scenario": "Customer data from one enterprise tenant is briefly accessible to another tenant.",
+        "raw": "85",
+        "rating": 85
+      },
+      {
+        "scenario_id": 4,
+        "scenario": "The search index is an hour behind its normal freshness window.",
+        "raw": "30",
+        "rating": 30
+      },
+      {
+        "scenario_id": 5,
+        "scenario": "A deprecated API endpoint logged a warning from an internal service.",
+        "raw": "25",
+        "rating": 25
+      },
+      {
+        "scenario_id": 6,
+        "scenario": "The production database primary is unreachable and failover has not triggered.",
+        "raw": "85",
+        "rating": 85
+      },
+      {
+        "scenario_id": 7,
+        "scenario": "A feature-flag evaluation returned the default value instead of the rollout bucket for 2% of requests.",
+        "raw": "30",
+        "rating": 30
+      },
+      {
+        "scenario_id": 8,
+        "scenario": "The marketing site's footer link to the careers page returns a 404.",
+        "raw": "25",
+        "rating": 25
+      },
+      {
+        "scenario_id": 9,
+        "scenario": "Payment authorization is timing out for all customers on the checkout page.",
+        "raw": "85",
+        "rating": 85
+      },
+      {
+        "scenario_id": 10,
+        "scenario": "A CI run on the main branch took 12 minutes instead of the usual 8.",
+        "raw": "30",
+        "rating": 30
+      },
+      {
+        "scenario_id": 11,
+        "scenario": "An engineer's local IDE integration is hanging when opening the monorepo.",
+        "raw": "25",
+        "rating": 25
+      }
+    ],
+    "llama3.2:3b": [
+      {
+        "scenario_id": 0,
+        "scenario": "A shared Slack bot posted a duplicate welcome message to one channel.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 1,
+        "scenario": "The auth service has been returning 502s for all login attempts for 6 minutes.",
+        "raw": "60",
+        "rating": 60
+      },
+      {
+        "scenario_id": 2,
+        "scenario": "A scheduled report was delivered 30 minutes later than usual.",
+        "raw": "40",
+        "rating": 40
+      },
+      {
+        "scenario_id": 3,
+        "scenario": "Customer data from one enterprise tenant is briefly accessible to another tenant.",
+        "raw": "60",
+        "rating": 60
+      },
+      {
+        "scenario_id": 4,
+        "scenario": "The search index is an hour behind its normal freshness window.",
+        "raw": "60",
+        "rating": 60
+      },
+      {
+        "scenario_id": 5,
+        "scenario": "A deprecated API endpoint logged a warning from an internal service.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 6,
+        "scenario": "The production database primary is unreachable and failover has not triggered.",
+        "raw": "80",
+        "rating": 80
+      },
+      {
+        "scenario_id": 7,
+        "scenario": "A feature-flag evaluation returned the default value instead of the rollout bucket for 2% of requests.",
+        "raw": "60",
+        "rating": 60
+      },
+      {
+        "scenario_id": 8,
+        "scenario": "The marketing site's footer link to the careers page returns a 404.",
+        "raw": "30",
+        "rating": 30
+      },
+      {
+        "scenario_id": 9,
+        "scenario": "Payment authorization is timing out for all customers on the checkout page.",
+        "raw": "80",
+        "rating": 80
+      },
+      {
+        "scenario_id": 10,
+        "scenario": "A CI run on the main branch took 12 minutes instead of the usual 8.",
+        "raw": "30",
+        "rating": 30
+      },
+      {
+        "scenario_id": 11,
+        "scenario": "An engineer's local IDE integration is hanging when opening the monorepo.",
+        "raw": "60",
+        "rating": 60
+      }
+    ],
+    "llama3.2:1b": [
+      {
+        "scenario_id": 0,
+        "scenario": "A shared Slack bot posted a duplicate welcome message to one channel.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 1,
+        "scenario": "The auth service has been returning 502s for all login attempts for 6 minutes.",
+        "raw": "5",
+        "rating": 5
+      },
+      {
+        "scenario_id": 2,
+        "scenario": "A scheduled report was delivered 30 minutes later than usual.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 3,
+        "scenario": "Customer data from one enterprise tenant is briefly accessible to another tenant.",
+        "raw": "50",
+        "rating": 50
+      },
+      {
+        "scenario_id": 4,
+        "scenario": "The search index is an hour behind its normal freshness window.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 5,
+        "scenario": "A deprecated API endpoint logged a warning from an internal service.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 6,
+        "scenario": "The production database primary is unreachable and failover has not triggered.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 7,
+        "scenario": "A feature-flag evaluation returned the default value instead of the rollout bucket for 2% of requests.",
+        "raw": "90",
+        "rating": 90
+      },
+      {
+        "scenario_id": 8,
+        "scenario": "The marketing site's footer link to the careers page returns a 404.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 9,
+        "scenario": "Payment authorization is timing out for all customers on the checkout page.",
+        "raw": "20",
+        "rating": 20
+      },
+      {
+        "scenario_id": 10,
+        "scenario": "A CI run on the main branch took 12 minutes instead of the usual 8.",
+        "raw": "80",
+        "rating": 80
+      },
+      {
+        "scenario_id": 11,
+        "scenario": "An engineer's local IDE integration is hanging when opening the monorepo.",
+        "raw": "20",
+        "rating": 20
+      }
+    ]
+  }
+}
