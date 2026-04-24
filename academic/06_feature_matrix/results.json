@@ -1,0 +1,74 @@
+{
+  "benchmark": "academic/06_feature_matrix",
+  "status": "ok",
+  "seed": 42,
+  "headline": "VRGB is the only encoding passing all four properties (compact/readable/interpolable/queryable). Passing set: ['vrgb']",
+  "metrics": {
+    "thresholds": {
+      "compact_bytes_per_signal_max": 10,
+      "interpolation_tolerance": 0.02,
+      "interpolation_pass_rate_required": 0.95
+    },
+    "by_encoding": {
+      "nl_labels": {
+        "bytes_per_signal_mean": 23.895,
+        "compact": false,
+        "readable": true,
+        "interpolable": false,
+        "interpolation_op_exists": false,
+        "interpolation_pass_rate": null,
+        "queryable": false,
+        "queryable_note": "requires text parsing (BM25 / keyword matching) or an LLM",
+        "passes_all_four": false
+      },
+      "json_numeric": {
+        "bytes_per_signal_mean": 16.885,
+        "compact": false,
+        "readable": true,
+        "interpolable": true,
+        "interpolation_op_exists": true,
+        "interpolation_pass_rate": 1.0,
+        "queryable": true,
+        "queryable_note": "parse the numeric value once, sort by |\u0394value|",
+        "passes_all_four": false
+      },
+      "binary_uint8": {
+        "bytes_per_signal_mean": 1.0,
+        "compact": true,
+        "readable": false,
+        "interpolable": true,
+        "interpolation_op_exists": true,
+        "interpolation_pass_rate": 1.0,
+        "queryable": true,
+        "queryable_note": "subtract bytes, sort by |\u0394|",
+        "passes_all_four": false
+      },
+      "embedding_stub": {
+        "bytes_per_signal_mean": 3072.0,
+        "compact": false,
+        "readable": false,
+        "interpolable": false,
+        "interpolation_op_exists": false,
+        "interpolation_pass_rate": null,
+        "queryable": true,
+        "queryable_note": "cosine similarity on fixed-length vectors (O(d) per pair)",
+        "passes_all_four": false
+      },
+      "vrgb": {
+        "bytes_per_signal_mean": 7.0,
+        "compact": true,
+        "readable": true,
+        "interpolable": true,
+        "interpolation_op_exists": true,
+        "interpolation_pass_rate": 1.0,
+        "queryable": true,
+        "queryable_note": "decode hex to lightness, sort by |\u0394lightness|",
+        "passes_all_four": true
+      }
+    },
+    "encodings_passing_all_four": [
+      "vrgb"
+    ],
+    "unique_all_four_pass": true
+  }
+}

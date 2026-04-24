@@ -100,4 +100,6 @@ DIMENSIONS: dict[str, Dimension] = {
     "complexity": Dimension("complexity", "simple",      "complex",    270),
     "tone":       Dimension("tone",       "formal",      "casual",     150),
     "register":   Dimension("register",   "technical",   "plainspoken", 300),
+    "density":    Dimension("density",    "terse",       "verbose",    120),
+    "atmosphere": Dimension("atmosphere", "cozy",        "noir",       330),
 }

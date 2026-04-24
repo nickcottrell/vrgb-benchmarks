@@ -1,25 +1,26 @@
 # Length calibration
 
-**Claim:** Density encoding is a continuous word-budget dial, not a
-discrete token limit. Same prompt, three density states → 50 / 200 / 800
-words, monotonically.
+> **Status: NOT IMPLEMENTED. No measurements in this benchmark.**
+> Do not cite results from this directory. The proposal below describes
+> what the benchmark would measure once built.
 
-## Method
+**Proposal:** Density encoding is a continuous word-budget dial. Same
+prompt, three density states → 50 / 200 / 800 words, monotonically.
 
-1. Fix a story prompt: "Tell me about the time the lights went out at the
-   summer camp."
-2. Pick three density anchors that map to (50, 200, 800) word budgets.
-3. Generate outputs, measure actual word counts.
-4. Report deviation from target — lower is better. A smooth
-   budget → word-count curve is the headline.
+## Method (planned)
+
+1. Fix a story prompt.
+2. Three anchors on the `density` dimension mapping to target word
+   counts (50 / 200 / 800).
+3. Generate outputs (via local Ollama), measure actual word counts,
+   report deviation from target.
+4. A smooth budget → word-count curve across the three states is the
+   headline.
 
 ## Running
 
-```
-python run.py --seed 42 --out results.json
-```
+Not runnable yet — `run.py` is a stub.
 
 ## Status
 
-Stub. The density-encoding protocol is the same one used elsewhere for
-chapter-scale generation; the mapping is encoded value → word-budget.
+Stub.

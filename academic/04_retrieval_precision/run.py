@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
-"""Retrieval precision @ k: hue-band vs BM25.
+"""Retrieval precision @ k across four methods.
 
-Corpus: N synthetic incident reports. Each record has:
-  - topical text (neutral prose; does not expose qualitative signals)
-  - VRGB tags for urgency, risk, confidence
+Corpus: N synthetic incident reports. Each record has topical text
+(neutral prose that does not express qualitative signals) and VRGB tags
+for urgency, risk, confidence.
 
-Query: pick M records, ask "find records with similar (urgency, risk,
-confidence) to this one." Ground truth = records whose combined
-value-space distance is under a fixed epsilon.
+Query: "find records with similar (urgency, risk, confidence) to this
+one." Ground truth: records whose combined value-space distance is under
+a fixed epsilon.
 
-VRGB ranks by sum of |Δlightness| across the three tagged dimensions.
-BM25 ranks by term-frequency score on the text.
+Four retrieval methods compared:
+  numeric_oracle     query by value-distance directly (upper bound)
+  vrgb               rank by sum of |Δlightness| after decoding hex tags
+  embeddings_nomic   cosine similarity on nomic-embed-text embeddings
+  bm25               BM25 score on text
 
-The test measures what happens when qualitative signals are stored as
-hex tags rather than expressed in the text: VRGB can retrieve, BM25
-cannot see the signal.
+First run calls Ollama to compute embeddings (caches to
+`fixture/embeddings.json`); subsequent runs use the cache.
 """
 
 import argparse
@@ -30,9 +32,11 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from lib.vrgb import DIMENSIONS, encode, decode  # noqa: E402
+from lib.ollama import embed as ollama_embed, available as ollama_available, OllamaError  # noqa: E402
 
 
 TAGGED_DIMS = ["urgency", "risk", "confidence"]
+EMBED_MODEL = "nomic-embed-text"
 
 TOPICS = [
     "database", "cache", "load balancer", "message queue", "auth service",
@@ -64,12 +68,7 @@ def build_corpus(n: int, rng: random.Random) -> list[dict]:
     for i in range(n):
         values = {dim: rng.random() for dim in TAGGED_DIMS}
         tags = {dim: encode(DIMENSIONS[dim], v) for dim, v in values.items()}
-        corpus.append({
-            "id": i,
-            "text": make_text(rng),
-            "values": values,
-            "tags": tags,
-        })
+        corpus.append({"id": i, "text": make_text(rng), "values": values, "tags": tags})
     return corpus
 
 
@@ -78,13 +77,21 @@ def value_distance(a: dict, b: dict) -> float:
 
 
 def vrgb_distance(query_tags: dict, doc_tags: dict) -> float:
-    """Sum of per-dim lightness differences computed from hex (not values)."""
     total = 0.0
     for dim in TAGGED_DIMS:
         v_q, _ = decode(DIMENSIONS[dim], query_tags[dim])
         v_d, _ = decode(DIMENSIONS[dim], doc_tags[dim])
         total += abs(v_q - v_d)
     return total
+
+
+def cosine(a: list[float], b: list[float]) -> float:
+    num = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    if na == 0 or nb == 0:
+        return 0.0
+    return num / (na * nb)
 
 
 class BM25:
@@ -125,68 +132,92 @@ def precision_at_k(ranked_ids: list[int], relevant: set[int], k: int) -> float:
     return sum(1 for i in top_k if i in relevant) / k
 
 
+def load_or_compute_embeddings(corpus: list[dict], fixture_path: Path, regen: bool) -> list[list[float]]:
+    if fixture_path.exists() and not regen:
+        data = json.loads(fixture_path.read_text())
+        if data.get("n") == len(corpus) and data.get("model") == EMBED_MODEL:
+            return data["embeddings"]
+    if not ollama_available():
+        raise OllamaError("Ollama unreachable; cannot compute embeddings.")
+    print(f"Computing {len(corpus)} embeddings via Ollama ({EMBED_MODEL})...")
+    embeddings = []
+    for i, r in enumerate(corpus):
+        if i % 50 == 0:
+            print(f"  {i}/{len(corpus)}")
+        embeddings.append(ollama_embed(EMBED_MODEL, r["text"]))
+    fixture_path.parent.mkdir(parents=True, exist_ok=True)
+    fixture_path.write_text(json.dumps({
+        "model": EMBED_MODEL, "n": len(corpus), "embeddings": embeddings,
+    }) + "\n")
+    print(f"Wrote embeddings fixture: {fixture_path}")
+    return embeddings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--n", type=int, default=300, help="corpus size")
+    ap.add_argument("--n", type=int, default=300)
     ap.add_argument("--queries", type=int, default=40)
-    ap.add_argument("--epsilon", type=float, default=0.30,
-                    help="value-space distance threshold for ground-truth relevance")
+    ap.add_argument("--epsilon", type=float, default=0.30)
+    ap.add_argument("--fixture", type=Path, default=Path("fixture/embeddings.json"))
+    ap.add_argument("--regen", action="store_true")
     ap.add_argument("--out", type=Path, default=Path("results.json"))
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
     corpus = build_corpus(args.n, rng)
     bm25 = BM25([r["text"] for r in corpus])
+    embeddings = load_or_compute_embeddings(corpus, args.fixture, args.regen)
 
-    # Pick queries deterministically.
     query_ids = rng.sample(range(args.n), args.queries)
-
     ks = [1, 3, 5, 10]
-    vrgb_at_k = {k: [] for k in ks}
-    bm25_at_k = {k: [] for k in ks}
+    methods = ["numeric_oracle", "vrgb", "embeddings_nomic", "bm25"]
+    scores: dict[str, dict[int, list[float]]] = {m: {k: [] for k in ks} for m in methods}
     avg_relevant = []
 
     for qid in query_ids:
         q = corpus[qid]
-        # Ground truth: all OTHER records within epsilon in value-space.
         relevant = {
             r["id"] for r in corpus
             if r["id"] != qid and value_distance(q["values"], r["values"]) < args.epsilon
         }
         avg_relevant.append(len(relevant))
 
-        # VRGB ranking (ascending distance; exclude query itself).
-        vrgb_ranked = sorted(
-            (r["id"] for r in corpus if r["id"] != qid),
-            key=lambda i: vrgb_distance(q["tags"], corpus[i]["tags"]),
-        )
+        other_ids = [r["id"] for r in corpus if r["id"] != qid]
 
-        # BM25 ranking (descending score; exclude query itself).
+        oracle_rank = sorted(other_ids, key=lambda i: value_distance(q["values"], corpus[i]["values"]))
+        vrgb_rank = sorted(other_ids, key=lambda i: vrgb_distance(q["tags"], corpus[i]["tags"]))
+        emb_rank = sorted(other_ids, key=lambda i: -cosine(embeddings[qid], embeddings[i]))
         q_tokens = q["text"].lower().split()
-        bm25_ranked = sorted(
-            (r["id"] for r in corpus if r["id"] != qid),
-            key=lambda i: -bm25.score(q_tokens, i),
-        )
+        bm25_rank = sorted(other_ids, key=lambda i: -bm25.score(q_tokens, i))
 
         for k in ks:
-            vrgb_at_k[k].append(precision_at_k(vrgb_ranked, relevant, k))
-            bm25_at_k[k].append(precision_at_k(bm25_ranked, relevant, k))
+            scores["numeric_oracle"][k].append(precision_at_k(oracle_rank, relevant, k))
+            scores["vrgb"][k].append(precision_at_k(vrgb_rank, relevant, k))
+            scores["embeddings_nomic"][k].append(precision_at_k(emb_rank, relevant, k))
+            scores["bm25"][k].append(precision_at_k(bm25_rank, relevant, k))
+
+    p_at_k = {m: {k: round(mean(scores[m][k]), 4) for k in ks} for m in methods}
 
     metrics = {
         "n_corpus": args.n,
         "n_queries": args.queries,
         "epsilon": args.epsilon,
         "mean_relevant_per_query": round(mean(avg_relevant), 2),
-        "vrgb_p_at_k": {k: round(mean(vrgb_at_k[k]), 4) for k in ks},
-        "bm25_p_at_k": {k: round(mean(bm25_at_k[k]), 4) for k in ks},
-        "delta_p_at_k": {k: round(mean(vrgb_at_k[k]) - mean(bm25_at_k[k]), 4) for k in ks},
+        "p_at_k": p_at_k,
+        "methods": {
+            "numeric_oracle":   "query by raw value-distance (upper bound; IS the ground-truth ranking)",
+            "vrgb":             "sum of |Δlightness| over three dimensions after decoding hex tags",
+            "embeddings_nomic": f"cosine similarity on {EMBED_MODEL} embeddings of the text",
+            "bm25":             "BM25 on the text (k1=1.5, b=0.75)",
+        },
     }
 
     headline = (
-        f"VRGB p@5 = {metrics['vrgb_p_at_k'][5]:.3f}, "
-        f"BM25 p@5 = {metrics['bm25_p_at_k'][5]:.3f} "
-        f"(Δ = {metrics['delta_p_at_k'][5]:+.3f})"
+        f"p@5: oracle={p_at_k['numeric_oracle'][5]:.3f}, "
+        f"vrgb={p_at_k['vrgb'][5]:.3f}, "
+        f"nomic-embed={p_at_k['embeddings_nomic'][5]:.3f}, "
+        f"bm25={p_at_k['bm25'][5]:.3f}"
     )
 
     result = {
@@ -195,23 +226,21 @@ def main() -> int:
         "seed": args.seed,
         "headline": headline,
         "metrics": metrics,
-        "note": ("Text is topical and does not express qualitative signals; "
-                 "BM25 has no signal to match on the qualitative query."),
+        "note": ("Text is topical and does not express qualitative signals. "
+                 "VRGB matches the oracle (a quantized shadow of it). Text-based "
+                 "methods (embeddings, BM25) cannot see the qualitative query."),
     }
     args.out.write_text(json.dumps(result, indent=2) + "\n")
 
-    print(f"Wrote results to {args.out}")
+    print(f"\nWrote results to {args.out}")
     print()
-    print(f"  corpus        {args.n}")
-    print(f"  queries       {args.queries}")
-    print(f"  epsilon       {args.epsilon}")
-    print(f"  mean relevant {metrics['mean_relevant_per_query']}")
+    print(f"  corpus {args.n}, queries {args.queries}, epsilon {args.epsilon}, "
+          f"mean relevant/query {metrics['mean_relevant_per_query']}")
     print()
-    print(f"  k     VRGB      BM25      Δ")
-    for k in ks:
-        print(f"  {k:<4}  {metrics['vrgb_p_at_k'][k]:.4f}    "
-              f"{metrics['bm25_p_at_k'][k]:.4f}    "
-              f"{metrics['delta_p_at_k'][k]:+.4f}")
+    print(f"  {'method':22s} {'p@1':>7s} {'p@3':>7s} {'p@5':>7s} {'p@10':>7s}")
+    for m in methods:
+        row = " ".join(f"{p_at_k[m][k]:7.4f}" for k in ks)
+        print(f"  {m:22s} {row}")
     return 0
 
 

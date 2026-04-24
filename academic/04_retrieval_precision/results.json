@@ -2,30 +2,44 @@
   "benchmark": "academic/04_retrieval_precision",
   "status": "ok",
   "seed": 42,
-  "headline": "VRGB p@5 = 0.960, BM25 p@5 = 0.025 (\u0394 = +0.935)",
+  "headline": "p@5: oracle=0.960, vrgb=0.960, nomic-embed=0.025, bm25=0.025",
   "metrics": {
     "n_corpus": 300,
     "n_queries": 40,
     "epsilon": 0.3,
     "mean_relevant_per_query": 8.72,
-    "vrgb_p_at_k": {
-      "1": 1.0,
-      "3": 1.0,
-      "5": 0.96,
-      "10": 0.7725
+    "p_at_k": {
+      "numeric_oracle": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 0.96,
+        "10": 0.775
+      },
+      "vrgb": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 0.96,
+        "10": 0.7725
+      },
+      "embeddings_nomic": {
+        "1": 0.0,
+        "3": 0.0333,
+        "5": 0.025,
+        "10": 0.0225
+      },
+      "bm25": {
+        "1": 0.025,
+        "3": 0.0333,
+        "5": 0.025,
+        "10": 0.0275
+      }
     },
-    "bm25_p_at_k": {
-      "1": 0.025,
-      "3": 0.0333,
-      "5": 0.025,
-      "10": 0.0275
-    },
-    "delta_p_at_k": {
-      "1": 0.975,
-      "3": 0.9667,
-      "5": 0.935,
-      "10": 0.745
+    "methods": {
+      "numeric_oracle": "query by raw value-distance (upper bound; IS the ground-truth ranking)",
+      "vrgb": "sum of |\u0394lightness| over three dimensions after decoding hex tags",
+      "embeddings_nomic": "cosine similarity on nomic-embed-text embeddings of the text",
+      "bm25": "BM25 on the text (k1=1.5, b=0.75)"
     }
   },
-  "note": "Text is topical and does not express qualitative signals; BM25 has no signal to match on the qualitative query."
+  "note": "Text is topical and does not express qualitative signals. VRGB matches the oracle (a quantized shadow of it). Text-based methods (embeddings, BM25) cannot see the qualitative query."
 }

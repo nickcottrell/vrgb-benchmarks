@@ -1,22 +1,24 @@
 # Voice / register
 
-**Claim:** The `register` dimension steers speaker identity — teacher vs
-researcher vs performer — as cleanly as `tone` steers affect.
+> **Status: NOT IMPLEMENTED. No measurements in this benchmark.**
+> Do not cite results from this directory. The proposal below describes
+> what the benchmark would measure once built.
 
-## Method
+**Proposal:** The `register` dimension steers speaker identity —
+teacher vs researcher vs performer — as cleanly as `tone` steers affect.
+
+## Method (planned)
 
 1. Prompt: "Explain recursion."
-2. Three anchor states on the `register` dimension — teacher-to-child,
-   PhD-to-PhD, standup comedian. Anchor values live in `config.json`.
+2. Three anchors on the `register` dimension (teacher-to-child,
+   PhD-to-PhD, standup comedian).
 3. Generate three outputs, present side-by-side.
 4. Optional rubric (vocabulary level, sentence length, analogy use) to
    quantify the register shift.
 
 ## Running
 
-```
-python run.py --seed 42 --out results.json
-```
+Not runnable yet — `run.py` is a stub.
 
 ## Status
 

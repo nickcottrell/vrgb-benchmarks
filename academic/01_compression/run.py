@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
-"""Semantic compression ratio.
+"""Semantic compression ratio vs. real baselines.
 
-Encode N qualitative-judgment records three ways (raw text, JSON labels,
-VRGB hex) and measure bytes-per-signal. Fully local, fully deterministic.
+Encodes a deterministic corpus of qualitative-judgment records six ways
+and reports bytes-per-signal, bytes-per-record, and compression ratios
+against each baseline. Also flags whether each representation is
+human-readable (ASCII printable) since that is the axis where VRGB
+trades against binary packing.
+
+Representations:
+  raw_text          natural-language sentence per record
+  json_labels       {"urgency": "very critical", ...}
+  json_numeric      {"urgency": 0.75, ...}           <-- the real baseline
+  binary_uint8      5 bytes per record (8-bit quantized, same precision as VRGB)
+  binary_float32    20 bytes per record (full float32)
+  vrgb              35 bytes per record (7-byte hex per dim, concatenated)
 """
 
 import argparse
 import json
 import random
+import struct
 import sys
 from pathlib import Path
 from statistics import mean
@@ -36,17 +48,33 @@ def as_raw_text(record: dict[str, float]) -> str:
     return " ".join(parts)
 
 
-def as_json(record: dict[str, float]) -> str:
+def as_json_labels(record: dict[str, float]) -> str:
     labeled = {name: DIMENSIONS[name].label(val) for name, val in record.items()}
     return json.dumps(labeled, separators=(",", ":"))
+
+
+def as_json_numeric(record: dict[str, float]) -> str:
+    return json.dumps(record, separators=(",", ":"))
+
+
+def as_binary_uint8(record: dict[str, float]) -> bytes:
+    return bytes(int(round(record[name] * 255)) for name in DIM_NAMES)
+
+
+def as_binary_float32(record: dict[str, float]) -> bytes:
+    return struct.pack(f"<{len(DIM_NAMES)}f", *(record[name] for name in DIM_NAMES))
 
 
 def as_vrgb(record: dict[str, float]) -> str:
     return "".join(encode(DIMENSIONS[name], val) for name, val in record.items())
 
 
-def bytes_of(s: str) -> int:
-    return len(s.encode("utf-8"))
+def size_of(x: str | bytes) -> int:
+    return len(x.encode("utf-8")) if isinstance(x, str) else len(x)
+
+
+def is_readable(representation_name: str) -> bool:
+    return representation_name not in ("binary_uint8", "binary_float32")
 
 
 def main() -> int:
@@ -59,36 +87,51 @@ def main() -> int:
     rng = random.Random(args.seed)
     corpus = generate_corpus(args.n, rng)
 
-    raw_sizes = [bytes_of(as_raw_text(r)) for r in corpus]
-    json_sizes = [bytes_of(as_json(r)) for r in corpus]
-    vrgb_sizes = [bytes_of(as_vrgb(r)) for r in corpus]
+    encoders = {
+        "raw_text":       as_raw_text,
+        "json_labels":    as_json_labels,
+        "json_numeric":   as_json_numeric,
+        "binary_uint8":   as_binary_uint8,
+        "binary_float32": as_binary_float32,
+        "vrgb":           as_vrgb,
+    }
+
+    sizes: dict[str, list[int]] = {name: [size_of(enc(r)) for r in corpus]
+                                    for name, enc in encoders.items()}
+
+    bps = {name: round(mean(s) / len(DIM_NAMES), 3) for name, s in sizes.items()}
+    bpr = {name: round(mean(s), 2) for name, s in sizes.items()}
+
+    def ratio(a: str, b: str) -> float:
+        return round(mean(sizes[a]) / mean(sizes[b]), 3)
 
     metrics = {
         "n_records": args.n,
         "dimensions_per_record": len(DIM_NAMES),
-        "bytes_per_signal": {
-            "raw_text": round(mean(raw_sizes) / len(DIM_NAMES), 2),
-            "json": round(mean(json_sizes) / len(DIM_NAMES), 2),
-            "vrgb": round(mean(vrgb_sizes) / len(DIM_NAMES), 2),
+        "bytes_per_signal": bps,
+        "bytes_per_record_mean": bpr,
+        "readable": {name: is_readable(name) for name in encoders},
+        "vrgb_ratios": {
+            "vs_raw_text":       ratio("raw_text", "vrgb"),
+            "vs_json_labels":    ratio("json_labels", "vrgb"),
+            "vs_json_numeric":   ratio("json_numeric", "vrgb"),
+            "vs_binary_uint8":   ratio("binary_uint8", "vrgb"),
+            "vs_binary_float32": ratio("binary_float32", "vrgb"),
         },
-        "bytes_per_record_mean": {
-            "raw_text": round(mean(raw_sizes), 2),
-            "json": round(mean(json_sizes), 2),
-            "vrgb": round(mean(vrgb_sizes), 2),
-        },
-        "compression_ratio_vs_raw": {
-            "json": round(mean(raw_sizes) / mean(json_sizes), 3),
-            "vrgb": round(mean(raw_sizes) / mean(vrgb_sizes), 3),
-        },
-        "compression_ratio_vs_json": {
-            "vrgb": round(mean(json_sizes) / mean(vrgb_sizes), 3),
-        },
+        "note": ("A ratio > 1 means VRGB is smaller. VRGB beats both JSON "
+                 "variants but loses to binary packing on size. VRGB is "
+                 "the smallest encoding that remains human-readable."),
     }
 
+    vs_numeric = metrics["vrgb_ratios"]["vs_json_numeric"]
+    vs_binary = metrics["vrgb_ratios"]["vs_binary_uint8"]
     headline = (
-        f"{metrics['compression_ratio_vs_json']['vrgb']:.2f}x vs JSON, "
-        f"{metrics['compression_ratio_vs_raw']['vrgb']:.2f}x vs raw text"
+        f"VRGB = {bps['vrgb']:.2f} bytes/signal, "
+        f"{vs_numeric:.2f}x smaller than numeric JSON, "
+        f"{vs_binary:.2f}x the size of packed uint8 (unreadable)"
     )
+
+    sample = corpus[0]
     result = {
         "benchmark": "academic/01_compression",
         "status": "ok",
@@ -96,23 +139,29 @@ def main() -> int:
         "headline": headline,
         "metrics": metrics,
         "samples": {
-            "record": corpus[0],
-            "raw_text": as_raw_text(corpus[0]),
-            "json": as_json(corpus[0]),
-            "vrgb": as_vrgb(corpus[0]),
+            "record": sample,
+            "raw_text":       as_raw_text(sample),
+            "json_labels":    as_json_labels(sample),
+            "json_numeric":   as_json_numeric(sample),
+            "vrgb":           as_vrgb(sample),
+            "binary_uint8_hex":   as_binary_uint8(sample).hex(),
+            "binary_float32_hex": as_binary_float32(sample).hex(),
         },
     }
     args.out.write_text(json.dumps(result, indent=2) + "\n")
 
     print(f"Wrote results to {args.out}")
     print()
-    print("bytes per signal (lower is tighter):")
-    for k, v in metrics["bytes_per_signal"].items():
-        print(f"  {k:10s} {v:>7.2f}")
+    print(f"  {'encoding':18s}{'bytes/signal':>15s}{'bytes/record':>15s}  readable")
+    for name in encoders:
+        r = "yes" if is_readable(name) else "no"
+        print(f"  {name:18s}{bps[name]:>15.3f}{bpr[name]:>15.2f}  {r}")
     print()
-    print("compression ratio (higher = tighter):")
-    print(f"  vrgb vs raw_text   {metrics['compression_ratio_vs_raw']['vrgb']:.2f}x")
-    print(f"  vrgb vs json        {metrics['compression_ratio_vs_json']['vrgb']:.2f}x")
+    print(f"  vrgb / raw_text     ratio = {metrics['vrgb_ratios']['vs_raw_text']:.3f}")
+    print(f"  vrgb / json_labels  ratio = {metrics['vrgb_ratios']['vs_json_labels']:.3f}")
+    print(f"  vrgb / json_numeric ratio = {metrics['vrgb_ratios']['vs_json_numeric']:.3f}")
+    print(f"  vrgb / binary_u8    ratio = {metrics['vrgb_ratios']['vs_binary_uint8']:.3f}")
+    print(f"  vrgb / binary_f32   ratio = {metrics['vrgb_ratios']['vs_binary_float32']:.3f}")
     return 0
 
 

@@ -2,17 +2,32 @@
   "benchmark": "academic/05_drift_tracking",
   "status": "ok",
   "seed": 42,
-  "headline": "VRGB captured 30/30 drift days, JSON captured 12/30 (51/65 drift events invisible to JSON)",
+  "headline": "Silent drift: labels lose 78.5% of events, floats lose 1.5%, vrgb 0%. Float JSON and VRGB tie on capture; label JSON is the outlier.",
   "metrics": {
     "days_simulated": 30,
     "total_drift_events": 65,
     "label_boundary_crossings": 14,
-    "silent_drift_dims": 51,
-    "silent_drift_rate": 0.7846,
-    "days_vrgb_captured_change": 30,
-    "days_json_captured_change": 12,
-    "mean_vrgb_lines_changed_per_day": 4.2,
-    "mean_json_lines_changed_per_day": 0.933
+    "float_value_changes": 64,
+    "silent_drift_events_labels": 51,
+    "silent_drift_rate_labels": 0.7846,
+    "silent_drift_events_floats": 1,
+    "silent_drift_rate_floats": 0.0154,
+    "capture_rate": {
+      "vrgb": 1.0,
+      "labels": 1.0,
+      "floats": 1.0
+    },
+    "total_diff_chars": {
+      "vrgb": 1952,
+      "labels": 2584,
+      "floats": 2451
+    },
+    "diff_width_cv": {
+      "vrgb": 0.3851,
+      "labels": 0.5079,
+      "floats": 0.3791
+    },
+    "diff_width_cv_note": "Coefficient of variation (stdev/mean) of per-day diff-char counts. Lower = more uniform diff widths, easier for spot inspection and column-aligned review."
   },
   "fixture": "fixture",
   "per_day": [
@@ -20,271 +35,331 @@
       "day": 1,
       "touched_dims": 3,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 102,
+        "labels": 274,
+        "floats": 118
+      }
     },
     {
       "day": 2,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 98,
+        "labels": 76,
+        "floats": 118
+      }
     },
     {
       "day": 3,
       "touched_dims": 3,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 96,
+        "labels": 76,
+        "floats": 117
+      }
     },
     {
       "day": 4,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 54,
+        "labels": 76,
+        "floats": 68
+      }
     },
     {
       "day": 5,
       "touched_dims": 1,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 24,
+        "labels": 76,
+        "floats": 32
+      }
     },
     {
       "day": 6,
       "touched_dims": 1,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 32,
+        "labels": 76,
+        "floats": 39
+      }
     },
     {
       "day": 7,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 66,
+        "labels": 76,
+        "floats": 79
+      }
     },
     {
       "day": 8,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 54,
+        "labels": 76,
+        "floats": 70
+      }
     },
     {
       "day": 9,
       "touched_dims": 1,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 24,
+        "labels": 76,
+        "floats": 32
+      }
     },
     {
       "day": 10,
       "touched_dims": 2,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 66,
+        "labels": 62,
+        "floats": 82
+      }
     },
     {
       "day": 11,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 80,
+        "labels": 53,
+        "floats": 101
+      }
     },
     {
       "day": 12,
       "touched_dims": 2,
       "label_boundary_crossings": 2,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 2,
-      "json_lines_removed": 2
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 62,
+        "labels": 115,
+        "floats": 78
+      }
     },
     {
       "day": 13,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 72,
+        "labels": 115,
+        "floats": 88
+      }
     },
     {
       "day": 14,
       "touched_dims": 3,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 102,
+        "labels": 115,
+        "floats": 126
+      }
     },
     {
       "day": 15,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 66,
+        "labels": 115,
+        "floats": 82
+      }
     },
     {
       "day": 16,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 66,
+        "labels": 115,
+        "floats": 80
+      }
     },
     {
       "day": 17,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 60,
+        "labels": 115,
+        "floats": 73
+      }
     },
     {
       "day": 18,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 68,
+        "labels": 76,
+        "floats": 82
+      }
     },
     {
       "day": 19,
       "touched_dims": 1,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 30,
+        "labels": 62,
+        "floats": 38
+      }
     },
     {
       "day": 20,
       "touched_dims": 3,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 98,
+        "labels": 62,
+        "floats": 121
+      }
     },
     {
       "day": 21,
       "touched_dims": 1,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 32,
+        "labels": 62,
+        "floats": 40
+      }
     },
     {
       "day": 22,
       "touched_dims": 1,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 36,
+        "labels": 76,
+        "floats": 44
+      }
     },
     {
       "day": 23,
       "touched_dims": 1,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 1,
-      "vrgb_lines_removed": 1,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 1,
+      "diff_chars": {
+        "vrgb": 24,
+        "labels": 76,
+        "floats": 32
+      }
     },
     {
       "day": 24,
       "touched_dims": 2,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 54,
+        "labels": 76,
+        "floats": 70
+      }
     },
     {
       "day": 25,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 90,
+        "labels": 49,
+        "floats": 110
+      }
     },
     {
       "day": 26,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 90,
+        "labels": 47,
+        "floats": 112
+      }
     },
     {
       "day": 27,
       "touched_dims": 3,
       "label_boundary_crossings": 2,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 2,
-      "json_lines_removed": 2
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 68,
+        "labels": 152,
+        "floats": 122
+      }
     },
     {
       "day": 28,
       "touched_dims": 3,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 92,
+        "labels": 53,
+        "floats": 116
+      }
     },
     {
       "day": 29,
       "touched_dims": 3,
       "label_boundary_crossings": 0,
-      "vrgb_lines_added": 3,
-      "vrgb_lines_removed": 3,
-      "json_lines_added": 0,
-      "json_lines_removed": 0
+      "float_value_changes": 3,
+      "diff_chars": {
+        "vrgb": 84,
+        "labels": 53,
+        "floats": 106
+      }
     },
     {
       "day": 30,
       "touched_dims": 2,
       "label_boundary_crossings": 1,
-      "vrgb_lines_added": 2,
-      "vrgb_lines_removed": 2,
-      "json_lines_added": 1,
-      "json_lines_removed": 1
+      "float_value_changes": 2,
+      "diff_chars": {
+        "vrgb": 62,
+        "labels": 53,
+        "floats": 75
+      }
     }
   ]
 }

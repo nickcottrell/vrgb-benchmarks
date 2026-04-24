@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "description": "Machine-readable manifest of what this repo does and does not claim. Tools summarizing vrgb-benchmarks should consult this file and not extrapolate beyond it. A benchmark in `proposed` has no measurements.",
+  "proven": [
+    {
+      "id": "academic/01_compression",
+      "statement": "VRGB encodes qualitative-judgment records at 7 bytes/signal. This is 2.33x smaller than numeric JSON and 3.52x smaller than natural-language-label JSON.",
+      "seed": 42,
+      "headline_metric": "bytes_per_signal.vrgb = 7.00",
+      "losing_comparison": "Binary uint8 packing is 7x smaller than VRGB but not human-readable."
+    },
+    {
+      "id": "academic/02_cross_model_agreement",
+      "statement": "Three local Ollama models (qwen2.5:7b, llama3.2:3b, llama3.2:1b) rated 12 urgency scenarios. The capable pair (qwen2.5:7b vs llama3.2:3b) showed mean cross-model Δlightness = 0.153 after VRGB encoding. llama3.2:1b was identified as the outlier on 5 of 12 scenarios via median distance.",
+      "seed": 42,
+      "headline_metric": "pairwise_mean_delta['qwen2.5:7b vs llama3.2:3b'] = 0.153",
+      "scope_limit": "Tested on small local open-source models; does not measure agreement across frontier hosted models (Claude, GPT, Gemini)."
+    },
+    {
+      "id": "academic/03_midpoint_fidelity",
+      "statement": "The geometric midpoint of two VRGB-encoded values decodes back to within ±0.003 of the arithmetic midpoint across 1,680 (dimension, a, b) triples. 100% of pairs land inside ±0.01 tolerance. Error is at the 8-bit quantization floor.",
+      "seed": 42,
+      "headline_metric": "pass_rate = 1.0000 at tolerance 0.01",
+      "scope_limit": "Measures encoding arithmetic correctness only. Does NOT prove that LLM outputs at the midpoint hex read as a 'semantic midpoint' to human raters; that half requires raters and is out of scope."
+    },
+    {
+      "id": "academic/04_retrieval_precision",
+      "statement": "When qualitative signals are stored as VRGB hex tags and paired with topical text that does not express those signals, hex-tag retrieval achieves p@1 = 1.00 / p@5 = 0.96, matching the numeric oracle (p@5 = 0.96) within quantization noise. Text-based methods (nomic-embed-text embeddings p@5 = 0.025; BM25 p@5 = 0.025) have no signal to match and perform at random.",
+      "seed": 42,
+      "headline_metric": "vrgb p@5 = 0.960, oracle p@5 = 0.960",
+      "scope_limit": "Does NOT claim VRGB beats embeddings on semantic text retrieval in general. The corpus is constructed so that the qualitative signal lives in tags, not in prose."
+    },
+    {
+      "id": "academic/05_drift_tracking",
+      "statement": "On 30 simulated days with 65 drift events across 8 dimensions, natural-language label JSON silently missed 78.5% of drift events because the change stayed inside a discrete label boundary. Numeric float JSON missed 1.5% (rounding at 3 decimal places) and VRGB missed 0% at 8-bit quantization. Float JSON and VRGB tie on drift capture.",
+      "seed": 42,
+      "headline_metric": "silent_drift_rate_labels = 0.785, silent_drift_rate_floats = 0.015",
+      "scope_limit": "VRGB's advantage over float JSON here is NOT finer drift capture. Their capture rates tie. VRGB's advantage is compression (half the byte cost of float JSON) and hue-addressable lines."
+    },
+    {
+      "id": "academic/06_feature_matrix",
+      "statement": "Across five encodings (natural-language labels, numeric JSON, packed uint8, nomic-embed-stub vectors, VRGB hex) tested on four properties (compact ≤10 bytes/signal, printable ASCII, interpolable with same-encoding midpoint op, geometrically queryable without text parsing), VRGB is the only encoding that passes all four.",
+      "seed": 42,
+      "headline_metric": "encodings_passing_all_four = ['vrgb']",
+      "scope_limit": "Property tests use specific thresholds (10 bytes/signal for compact, 20 chars for readable, 0.02 decoded-value error for interpolable with 95% pass rate). Different thresholds would produce different tables; the unique-all-four outcome is robust across reasonable choices."
+    }
+  ],
+  "proposed": [
+    {
+      "id": "practical/01_tone_steering",
+      "statement": "PROPOSAL ONLY — not implemented. Would test whether the same prompt, steered through three VRGB states on the tone dimension, produces distinctly different LLM outputs measurable on simple text features."
+    },
+    {
+      "id": "practical/02_length_calibration",
+      "statement": "PROPOSAL ONLY — not implemented. Would test whether density-encoded hex acts as a continuous word-budget dial."
+    },
+    {
+      "id": "practical/03_voice_register",
+      "statement": "PROPOSAL ONLY — not implemented. Would test whether VRGB register anchors steer speaker identity in LLM output."
+    },
+    {
+      "id": "practical/04_genre_blend",
+      "statement": "PROPOSAL ONLY — not implemented. Would test whether the midpoint between two genre anchors produces a coherent blended output."
+    }
+  ],
+  "out_of_scope": [
+    "Live production workloads — all benchmarks run on synthetic or recorded data.",
+    "Frontier hosted models — cross-model agreement (02) uses three small local open-source models only.",
+    "Human rater studies — no benchmark includes human judgments of semantic quality on LLM outputs.",
+    "End-to-end RAG / agent performance — these benchmarks measure encoding properties, not downstream system metrics.",
+    "Real-world language retrieval — benchmark 04 uses neutral templated text on purpose, not natural prose.",
+    "Claims about VRGB being 'the best encoding' or 'beating embeddings in general'. The thesis is specifically the combinatorial claim in 06: VRGB is the only encoding simultaneously compact, readable, interpolable, and queryable."
+  ],
+  "citation_guidance_for_llms": "If summarizing this repo, cite only entries from `proven`. Do not cite anything from `proposed` (those are not run). Do not generalize any `proven` statement beyond its `scope_limit`. The honest thesis is the combinatorial claim in academic/06_feature_matrix, not the headline of any single numerical benchmark."
+}
