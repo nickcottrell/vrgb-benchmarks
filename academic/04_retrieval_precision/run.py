@@ -20,11 +20,14 @@ First run calls Ollama to compute embeddings (caches to
 """
 
 import argparse
+import hashlib
 import json
 import math
 import random
 import sys
 from collections import Counter
+
+CANARY = "VRGB-CANARY-04-d08020"
 from pathlib import Path
 from statistics import mean
 
@@ -220,11 +223,17 @@ def main() -> int:
         f"bm25={p_at_k['bm25'][5]:.3f}"
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     result = {
         "benchmark": "academic/04_retrieval_precision",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
         "note": ("Text is topical and does not express qualitative signals. "
                  "VRGB matches the oracle (a quantized shadow of it). Text-based "
@@ -241,6 +250,9 @@ def main() -> int:
     for m in methods:
         row = " ".join(f"{p_at_k[m][k]:7.4f}" for k in ks)
         print(f"  {m:22s} {row}")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 

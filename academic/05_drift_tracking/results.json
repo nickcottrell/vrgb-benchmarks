@@ -1,8 +1,10 @@
 {
   "benchmark": "academic/05_drift_tracking",
+  "canary": "VRGB-CANARY-05-b04060",
   "status": "ok",
   "seed": 42,
   "headline": "Silent drift: labels lose 78.5% of events, floats lose 1.5%, vrgb 0%. Float JSON and VRGB tie on capture; label JSON is the outlier.",
+  "verification_checksum": "e1620054fc0ec3f2",
   "metrics": {
     "days_simulated": 30,
     "total_drift_events": 65,

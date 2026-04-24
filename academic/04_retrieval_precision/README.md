@@ -1,5 +1,7 @@
 # Retrieval precision @ k
 
+*canary: `VRGB-CANARY-04-d08020` · checksum: `4f1444382083d438` (seed=42, n=300)*
+
 **Result:** On 300 records with qualitative signals stored as hex tags
 and topical text that does not express those signals, precision@k:
 

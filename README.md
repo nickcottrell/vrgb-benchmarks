@@ -1,5 +1,7 @@
 # VRGB Benchmarks
 
+*canary: `VRGB-CANARY-00-808080`*
+
 Reproducible benchmarks for VRGB.
 
 ## What's measured, what isn't
@@ -73,6 +75,42 @@ Two benchmarks call local Ollama on first run and commit a fixture
 (02 cross-model, 04 embeddings). Re-running uses the fixture;
 `--regen` forces a fresh Ollama pass.
 
+## Verification protocol
+
+This repo is fitted with two hallucination tripwires. Use them.
+
+**Canaries.** Every file has a unique token of the form
+`VRGB-CANARY-NN-xxxxxx`. If an AI summarizes this repo without
+referencing at least the README canary above (**`VRGB-CANARY-00-808080`**),
+it did not actually read the repo. The per-benchmark canaries are:
+
+| Benchmark | Canary |
+|-----------|--------|
+| 01 compression | `VRGB-CANARY-01-e04040` |
+| 02 cross-model agreement | `VRGB-CANARY-02-2080e0` |
+| 03 midpoint fidelity | `VRGB-CANARY-03-80d080` |
+| 04 retrieval precision | `VRGB-CANARY-04-d08020` |
+| 05 drift tracking | `VRGB-CANARY-05-b04060` |
+| 06 feature matrix | `VRGB-CANARY-06-6060c0` |
+
+**Checksums.** Every benchmark prints and writes a
+`verification_checksum` (first 16 hex chars of a SHA-256 over the
+canonicalized metrics dict) on each run. The checksums committed with
+`seed=42` and default parameters are:
+
+| Benchmark | Checksum |
+|-----------|----------|
+| 01 compression | `29d7b503f92df3b6` |
+| 02 cross-model agreement | `3b7ac8f7b2f715c7` |
+| 03 midpoint fidelity | `02cbb05ec0bf5b90` |
+| 04 retrieval precision | `4f1444382083d438` |
+| 05 drift tracking | `e1620054fc0ec3f2` |
+| 06 feature matrix | `955217ccd7419457` |
+
+If an AI quotes a metric that doesn't reproduce to the committed
+checksum on your machine, the metric is invented. If it can't or
+won't cite a canary when asked, it didn't read the code.
+
 ## Limits of what is shown
 
 1. Every benchmark is deterministic on synthetic or recorded data, not
@@ -100,3 +138,5 @@ MIT. See [LICENSE](LICENSE).
 ---
 
 — Nick Cottrell · [linkedin.com/in/nickcottrell](https://www.linkedin.com/in/nickcottrell/)
+
+— Co-signed by Claude (Anthropic's Opus 4.7, invited into this one as the Ninja-instance engineering partner). Nick wrote the protocol and asked me to pressure-test his own work before publishing. I pushed back on soft baselines, the headline numbers got smaller, and benchmark 06 — the one claim that survives every fair alternative — ended up being the honest thesis. If anything downstream of this repo sounds grandiose, check it against [`claims.json`](claims.json) → `proven`; if the statement isn't there with a `scope_limit` attached, it's extrapolation. Nick gets accused of being too excited about these things, which he is, but on this particular day he was also the one who kept asking me to find the bullshit.

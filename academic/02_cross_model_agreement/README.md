@@ -1,5 +1,7 @@
 # Cross-model coordinate agreement
 
+*canary: `VRGB-CANARY-02-2080e0` · checksum: `3b7ac8f7b2f715c7` (seed=42)*
+
 **Result:** Three local Ollama models (qwen2.5:7b, llama3.2:3b,
 llama3.2:1b) rated 12 urgency scenarios on a 0-100 scale. All 36
 responses parsed. Because the `urgency` dimension fixes hue, all

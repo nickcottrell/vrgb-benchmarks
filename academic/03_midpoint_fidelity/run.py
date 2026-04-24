@@ -7,8 +7,11 @@ Pure math, no network, deterministic.
 """
 
 import argparse
+import hashlib
 import json
 import sys
+
+CANARY = "VRGB-CANARY-03-80d080"
 from pathlib import Path
 from statistics import mean
 
@@ -79,11 +82,17 @@ def main() -> int:
         f"within ±0.01 (max error {metrics['error_max']})"
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     result = {
         "benchmark": "academic/03_midpoint_fidelity",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
         "worst_cases": worst,
     }
@@ -97,6 +106,9 @@ def main() -> int:
     print(f"  error max        {metrics['error_max']}")
     print(f"  error RMS        {metrics['error_rms']}")
     print(f"  within ±0.01     {metrics['pass_rate']*100:.2f}%")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 

@@ -1,5 +1,7 @@
 # Drift tracking under git
 
+*canary: `VRGB-CANARY-05-b04060` · checksum: `e1620054fc0ec3f2` (seed=42, days=30)*
+
 **Result:** On a 30-day simulation across 8 dimensions (65 drift events
 total), the three encodings break down like this:
 

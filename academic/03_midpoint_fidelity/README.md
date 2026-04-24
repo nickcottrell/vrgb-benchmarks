@@ -1,5 +1,7 @@
 # Midpoint interpolation fidelity
 
+*canary: `VRGB-CANARY-03-80d080` · checksum: `02cbb05ec0bf5b90` (seed=42)*
+
 **Result:** The geometric midpoint of two encoded values decodes back to
 within ±0.003 of the arithmetic midpoint across 1,680 (dimension, a, b)
 triples. 100% of pairs land inside ±0.01 tolerance.

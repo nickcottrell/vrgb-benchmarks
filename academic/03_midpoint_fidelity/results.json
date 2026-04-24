@@ -1,18 +1,20 @@
 {
   "benchmark": "academic/03_midpoint_fidelity",
+  "canary": "VRGB-CANARY-03-80d080",
   "status": "ok",
   "seed": 42,
-  "headline": "100.00% of 1680 pairs within \u00b10.01 (max error 0.003081)",
+  "headline": "100.00% of 2100 pairs within \u00b10.01 (max error 0.003081)",
+  "verification_checksum": "02cbb05ec0bf5b90",
   "metrics": {
-    "n_dimensions": 8,
-    "n_pairs_tested": 1680,
+    "n_dimensions": 10,
+    "n_pairs_tested": 2100,
     "grid_step": 0.05,
     "error_mean": 0.000989,
     "error_max": 0.003081,
     "error_p99": 0.003011,
     "error_rms": 0.001241,
     "tolerance": 0.01,
-    "pairs_within_tolerance": 1680,
+    "pairs_within_tolerance": 2100,
     "pass_rate": 1.0
   },
   "worst_cases": [

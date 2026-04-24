@@ -1,8 +1,10 @@
 {
   "benchmark": "academic/04_retrieval_precision",
+  "canary": "VRGB-CANARY-04-d08020",
   "status": "ok",
   "seed": 42,
   "headline": "p@5: oracle=0.960, vrgb=0.960, nomic-embed=0.025, bm25=0.025",
+  "verification_checksum": "4f1444382083d438",
   "metrics": {
     "n_corpus": 300,
     "n_queries": 40,

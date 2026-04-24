@@ -15,11 +15,14 @@ four properties simultaneously.**
 """
 
 import argparse
+import hashlib
 import json
 import random
 import struct
 import sys
 from pathlib import Path
+
+CANARY = "VRGB-CANARY-06-6060c0"
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -211,11 +214,17 @@ def main() -> int:
         f"(compact/readable/interpolable/queryable). Passing set: {passing}"
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     result = {
         "benchmark": "academic/06_feature_matrix",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
     }
     args.out.write_text(json.dumps(result, indent=2) + "\n")
@@ -235,6 +244,9 @@ def main() -> int:
         print(row)
     print()
     print(f"  all-four passers: {passing}")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 

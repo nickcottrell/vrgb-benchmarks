@@ -11,9 +11,12 @@ read the fixture deterministically. `--regen` forces a fresh Ollama pass.
 """
 
 import argparse
+import hashlib
 import json
 import re
 import sys
+
+CANARY = "VRGB-CANARY-02-2080e0"
 from pathlib import Path
 from statistics import mean, stdev
 
@@ -197,11 +200,17 @@ def main() -> int:
         f"outlier counts: {outlier_counts}"
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     result = {
         "benchmark": "academic/02_cross_model_agreement",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
         "per_scenario": per_scenario,
     }
@@ -221,6 +230,9 @@ def main() -> int:
     print(f"  outlier count by model:")
     for m, c in outlier_counts.items():
         print(f"    {m:20s}  {c}")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 

@@ -1,5 +1,7 @@
 # Semantic compression ratio
 
+*canary: `VRGB-CANARY-01-e04040` · checksum: `29d7b503f92df3b6` (seed=42, n=200)*
+
 **Result:** On a 200-record corpus (5 dimensions each), VRGB encodes to
 **7.00 bytes/signal**. This is **2.33× smaller than the real baseline**
 (`{"urgency":0.75,...}` numeric JSON at 16.28 bytes/signal) and **3.52×

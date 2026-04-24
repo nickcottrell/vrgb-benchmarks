@@ -1,8 +1,10 @@
 {
   "benchmark": "academic/01_compression",
+  "canary": "VRGB-CANARY-01-e04040",
   "status": "ok",
   "seed": 42,
   "headline": "VRGB = 7.00 bytes/signal, 2.33x smaller than numeric JSON, 0.14x the size of packed uint8 (unreadable)",
+  "verification_checksum": "29d7b503f92df3b6",
   "metrics": {
     "n_records": 200,
     "dimensions_per_record": 5,

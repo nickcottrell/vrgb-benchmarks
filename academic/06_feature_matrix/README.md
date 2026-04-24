@@ -1,5 +1,7 @@
 # Combinatorial feature matrix
 
+*canary: `VRGB-CANARY-06-6060c0` · checksum: `955217ccd7419457` (seed=42)*
+
 **Result:** Tested on four properties with concrete pass/fail criteria:
 
 | Encoding          | bytes/sig | compact | readable | interp | queryable | all-4 |

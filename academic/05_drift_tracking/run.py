@@ -22,12 +22,15 @@ Honest framing:
 """
 
 import argparse
+import hashlib
 import json
 import os
 import random
 import shutil
 import subprocess
 import sys
+
+CANARY = "VRGB-CANARY-05-b04060"
 from pathlib import Path
 from statistics import mean
 
@@ -204,11 +207,17 @@ def main() -> int:
         f"Float JSON and VRGB tie on capture; label JSON is the outlier."
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     result = {
         "benchmark": "academic/05_drift_tracking",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
         "fixture": str(args.fixture),
         "per_day": events,
@@ -235,6 +244,9 @@ def main() -> int:
     print(f"  diff-width CV (lower = more uniform):")
     for kind in FILES:
         print(f"    {kind:10s}  {width_cv[kind]:.3f}")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 

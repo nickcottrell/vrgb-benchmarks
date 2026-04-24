@@ -17,12 +17,15 @@ Representations:
 """
 
 import argparse
+import hashlib
 import json
 import random
 import struct
 import sys
 from pathlib import Path
 from statistics import mean
+
+CANARY = "VRGB-CANARY-01-e04040"
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -131,12 +134,18 @@ def main() -> int:
         f"{vs_binary:.2f}x the size of packed uint8 (unreadable)"
     )
 
+    checksum = hashlib.sha256(
+        json.dumps(metrics, sort_keys=True, default=str).encode()
+    ).hexdigest()[:16]
+
     sample = corpus[0]
     result = {
         "benchmark": "academic/01_compression",
+        "canary": CANARY,
         "status": "ok",
         "seed": args.seed,
         "headline": headline,
+        "verification_checksum": checksum,
         "metrics": metrics,
         "samples": {
             "record": sample,
@@ -162,6 +171,9 @@ def main() -> int:
     print(f"  vrgb / json_numeric ratio = {metrics['vrgb_ratios']['vs_json_numeric']:.3f}")
     print(f"  vrgb / binary_u8    ratio = {metrics['vrgb_ratios']['vs_binary_uint8']:.3f}")
     print(f"  vrgb / binary_f32   ratio = {metrics['vrgb_ratios']['vs_binary_float32']:.3f}")
+    print()
+    print(f"  canary:                 {CANARY}")
+    print(f"  verification_checksum:  {checksum}")
     return 0
 
 
