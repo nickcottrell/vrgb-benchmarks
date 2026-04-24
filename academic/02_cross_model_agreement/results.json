@@ -1,0 +1,7 @@
+{
+  "benchmark": "academic/02_cross_model_agreement",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Fill in with Anthropic/OpenAI/Gemini API calls."
+}

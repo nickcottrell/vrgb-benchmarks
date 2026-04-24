@@ -1,0 +1,7 @@
+{
+  "benchmark": "practical/03_voice_register",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Three registers, three outputs, optional register rubric."
+}

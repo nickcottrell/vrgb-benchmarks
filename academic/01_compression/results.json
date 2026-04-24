@@ -1,0 +1,39 @@
+{
+  "benchmark": "academic/01_compression",
+  "status": "ok",
+  "seed": 42,
+  "headline": "3.52x vs JSON, 3.46x vs raw text",
+  "metrics": {
+    "n_records": 200,
+    "dimensions_per_record": 5,
+    "bytes_per_signal": {
+      "raw_text": 24.23,
+      "json": 24.63,
+      "vrgb": 7.0
+    },
+    "bytes_per_record_mean": {
+      "raw_text": 121.17,
+      "json": 123.17,
+      "vrgb": 35
+    },
+    "compression_ratio_vs_raw": {
+      "json": 0.984,
+      "vrgb": 3.462
+    },
+    "compression_ratio_vs_json": {
+      "vrgb": 3.519
+    }
+  },
+  "samples": {
+    "record": {
+      "urgency": 0.639,
+      "confidence": 0.025,
+      "risk": 0.275,
+      "priority": 0.223,
+      "clarity": 0.736
+    },
+    "raw_text": "Urgency is critical. Confidence is uncertain. Risk is slightly risky. Priority is slightly high. Clarity is clear.",
+    "json": "{\"urgency\":\"critical\",\"confidence\":\"uncertain\",\"risk\":\"slightly risky\",\"priority\":\"slightly high\",\"clarity\":\"clear\"}",
+    "vrgb": "#e05050#0d2b49#94571a#858517#6ee5e5"
+  }
+}

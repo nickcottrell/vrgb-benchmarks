@@ -1,0 +1,7 @@
+{
+  "benchmark": "academic/04_retrieval_precision",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Synthesize corpus, implement VRGB vs BM25, compare p@k."
+}

@@ -1,0 +1,7 @@
+{
+  "benchmark": "practical/02_length_calibration",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Target word counts via density hex, measure deviation."
+}

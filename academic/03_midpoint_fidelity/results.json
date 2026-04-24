@@ -1,0 +1,7 @@
+{
+  "benchmark": "academic/03_midpoint_fidelity",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Fill in with midpoint decode test + optional rater half."
+}

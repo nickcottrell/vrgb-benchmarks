@@ -1,0 +1,7 @@
+{
+  "benchmark": "practical/01_tone_steering",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Wire to LLM or ship fixture outputs for three tones."
+}

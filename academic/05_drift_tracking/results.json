@@ -1,0 +1,7 @@
+{
+  "benchmark": "academic/05_drift_tracking",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Simulate 30 days, commit twin representations, diff."
+}

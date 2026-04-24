@@ -1,0 +1,7 @@
+{
+  "benchmark": "practical/04_genre_blend",
+  "status": "stub",
+  "seed": 42,
+  "metrics": {},
+  "note": "Noir <-> cozy at 0/50/100%, midpoint via lib.vrgb.midpoint."
+}
